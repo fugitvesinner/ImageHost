@@ -157,12 +157,6 @@ You can replace these with your own frontend.
 ## ❗ Important  
 > Make sure to run database migrations before starting the server.  
 
-```pqsql
-
-👉 I’d also suggest creating a **`requirements.txt`** file with all your dependencies so people can set it up easily.  
-
-Do you want me to generate that `requirements.txt` for this project too?
-```
 
 <p align="center">
   <img src="assets/banner.jpg" width="700" alt="PixelDust Banner"/>
