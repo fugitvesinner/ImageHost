@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PixelDust</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>PixelDust</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/static/dashboard.html" class="nav-item active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="/static/gallery.html" class="nav-item">
+                    <i class="fas fa-images"></i>
+                    <span>My Files</span>
+                </a>
+                <a href="/static/upload.html" class="nav-item">
+                    <i class="fas fa-upload"></i>
+                    <span>Upload</span>
+                </a>
+                <a href="/static/settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" onclick="logout()" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <span class="breadcrumb-item active">Dashboard</span>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="breadcrumb-item">Image Host</span>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="breadcrumb-item">Overview</span>
+                </div>
+                <button class="btn-icon" onclick="location.reload()">
+                    <i class="fas fa-bell"></i>
+                </button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Total Uploads</div>
+                        <div class="stat-value" id="totalUploads">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Uploads Today</div>
+                        <div class="stat-value" id="uploadsToday">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">File Size Limit</div>
+                        <div class="stat-value">1000MB</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-hdd"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Used Space</div>
+                        <div class="stat-value" id="usedSpace">4.54MB</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Free Space</div>
+                        <div class="stat-value" id="freeSpace">995.46MB</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-area"></i>
+                        Upload Analytics
+                    </h2>
+                    <div class="time-filters">
+                        <button class="time-filter active">24h</button>
+                        <button class="time-filter">7d</button>
+                        <button class="time-filter">14d</button>
+                        <button class="time-filter">30d</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="uploadChart" width="800" height="300"></canvas>
+                </div>
+            </div>
+
+            <!-- File Types Section -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-file-image"></i>
+                        File Types
+                    </h2>
+                </div>
+                <div class="file-types-chart">
+                    <div class="donut-chart">
+                        <div class="donut-center">
+                            <div class="donut-total">Total</div>
+                            <div class="donut-count" id="totalFiles">2 Files</div>
+                        </div>
+                    </div>
+                    <div class="file-types-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: var(--accent-primary);"></div>
+                            <span>Images</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
