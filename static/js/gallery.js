@@ -27,6 +27,7 @@ async function checkAuth() {
     }
 }
 
+// Load Files
 async function loadFiles() {
     const token = localStorage.getItem('token');
     const filesGrid = document.getElementById('filesGrid');
@@ -42,11 +43,23 @@ async function loadFiles() {
             allFiles = await response.json();
             displayFiles(allFiles);
         } else {
-            filesGrid.innerHTML = '<div class="empty-state"><i class="fas fa-images"></i><h3>Failed to load files</h3><p>Please try refreshing the page</p></div>';
+            filesGrid.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-images"></i>
+                    <h3>Failed to load files</h3>
+                    <p>Please try refreshing the page</p>
+                </div>
+            `;
         }
     } catch (error) {
         console.error('Failed to load files:', error);
-        filesGrid.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Connection Error</h3><p>Unable to connect to server</p></div>';
+        filesGrid.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Connection Error</h3>
+                <p>Unable to connect to server</p>
+            </div>
+        `;
     }
 }
 
@@ -55,7 +68,7 @@ function displayFiles(files) {
     
     if (files.length === 0) {
         filesGrid.innerHTML = `
-            <div class="empty-state">
+            <div class="empty-state-centered">
                 <i class="fas fa-images"></i>
                 <h3>No files uploaded yet</h3>
                 <p>Start by uploading your first image</p>
@@ -117,6 +130,7 @@ function createFileCard(file) {
 function openImageInNewTab(file) {
     window.open(`/view/${file.filename}`, '_blank');
 }
+
 function formatFileSize(bytes) {
     if (bytes === 0) return '0 B';
     const k = 1024;
@@ -127,7 +141,17 @@ function formatFileSize(bytes) {
 
 function copyFileLink(fileId) {
     const file = allFiles.find(f => f.id === fileId);
-    const link = file ? `http://localhost:8000/img/${file.filename}` : `http://localhost:8000/files/${fileId}/view`;
+    if (!file) return;
+    
+    const settings = JSON.parse(localStorage.getItem('customizationSettings') || '{}');
+    let link;
+    
+    if (settings.invisibleUrl) {
+        link = `https://i-love-your.mom/${file.filename}`;
+    } else {
+        link = `http://localhost:8000/img/${file.filename}`;
+    }
+    
     navigator.clipboard.writeText(link).then(() => {
         showNotification('Link copied to clipboard!', 'success');
     });
@@ -170,13 +194,21 @@ function showNotification(message, type = 'info') {
         top: 20px;
         right: 20px;
         padding: 16px 20px;
-        background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--error)' : 'var(--accent-primary)'};
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#8b5cf6'};
         color: white;
-        border-radius: 8px;
+        border-radius: 12px;
         z-index: 10000;
         animation: slideIn 0.3s ease;
+        box-shadow: 0 0 20px ${type === 'success' ? 'rgba(16, 185, 129, 0.3)' : type === 'error' ? 'rgba(239, 68, 68, 0.3)' : type === 'warning' ? 'rgba(245, 158, 11, 0.3)' : 'rgba(139, 92, 246, 0.3)'};
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
     `;
-    notification.textContent = message;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+        ${message}
+    `;
     document.body.appendChild(notification);
     
     setTimeout(() => {
@@ -184,47 +216,65 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-document.getElementById('searchInput').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    const filteredFiles = allFiles.filter(file => 
-        file.original_name.toLowerCase().includes(searchTerm)
-    );
-    displayFiles(filteredFiles);
+// Search and Sort
+document.getElementById('searchInput').addEventListener('input', function() {
+    applyFiltersAndSort();
 });
 
-document.getElementById('sortSelect').addEventListener('change', function(e) {
-    const sortBy = e.target.value;
-    let sortedFiles = [...allFiles];
+document.getElementById('sortSelect').addEventListener('change', function() {
+    applyFiltersAndSort();
+});
+
+document.getElementById('typeFilter').addEventListener('change', function() {
+    applyFiltersAndSort();
+});
+
+function applyFiltersAndSort() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const sortBy = document.getElementById('sortSelect').value;
+    const typeFilter = document.getElementById('typeFilter').value;
+    
+    let filteredFiles = allFiles.filter(file => {
+        const matchesSearch = file.original_name.toLowerCase().includes(searchTerm);
+        const matchesType = typeFilter === 'all' || 
+            (typeFilter === 'png' && file.file_type.includes('png')) ||
+            (typeFilter === 'jpg' && (file.file_type.includes('jpeg') || file.file_type.includes('jpg'))) ||
+            (typeFilter === 'gif' && file.file_type.includes('gif')) ||
+            (typeFilter === 'svg' && file.file_type.includes('svg'));
+        
+        return matchesSearch && matchesType;
+    });
     
     switch(sortBy) {
         case 'newest':
-            sortedFiles.sort((a, b) => new Date(b.upload_date) - new Date(a.upload_date));
+            filteredFiles.sort((a, b) => new Date(b.upload_date) - new Date(a.upload_date));
             break;
         case 'oldest':
-            sortedFiles.sort((a, b) => new Date(a.upload_date) - new Date(b.upload_date));
+            filteredFiles.sort((a, b) => new Date(a.upload_date) - new Date(b.upload_date));
             break;
         case 'largest':
-            sortedFiles.sort((a, b) => b.file_size - a.file_size);
+            filteredFiles.sort((a, b) => b.file_size - a.file_size);
             break;
         case 'smallest':
-            sortedFiles.sort((a, b) => a.file_size - b.file_size);
+            filteredFiles.sort((a, b) => a.file_size - b.file_size);
+            break;
+        case 'name':
+            filteredFiles.sort((a, b) => a.original_name.localeCompare(b.original_name));
+            break;
+        case 'type':
+            filteredFiles.sort((a, b) => a.file_type.localeCompare(b.file_type));
             break;
     }
     
-    displayFiles(sortedFiles);
-});
+    displayFiles(filteredFiles);
+}
 
 function logout() {
     localStorage.removeItem('token');
     window.location.href = '/';
 }
 
+// Initialize
 document.addEventListener('DOMContentLoaded', function() {
     checkAuth();
-});
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeImageModal();
-    }
 });

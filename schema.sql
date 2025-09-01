@@ -40,7 +40,10 @@ CREATE TABLE IF NOT EXISTS user_settings (
     public_profile BOOLEAN DEFAULT true,
     auto_delete_after_days INTEGER DEFAULT 0,
     max_file_size_mb INTEGER DEFAULT 10,
-    theme VARCHAR(20) DEFAULT 'dark'
+    theme VARCHAR(20) DEFAULT 'dark',
+    anonymous_upload BOOLEAN DEFAULT false,
+    discord_embed BOOLEAN DEFAULT true,
+    url_length INTEGER DEFAULT 8
 );
 
 CREATE TABLE IF NOT EXISTS file_shares (

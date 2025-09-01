@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image View - PixelDust</title>
+    <title>Image View</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -87,18 +88,18 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 24px;
+            padding: 16px;
             box-shadow: var(--purple-glow), var(--shadow);
-            max-width: 90vw;
-            max-height: 70vh;
-            display: flex;
+            max-width: 350px;
+            max-height: 350px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
         }
 
         .image-container img {
-            max-width: 100%;
-            max-height: 100%;
+            max-width: 250px;
+            max-height: 250px;
             object-fit: contain;
             border-radius: 12px;
             box-shadow: var(--shadow);
@@ -128,6 +129,24 @@
             color: var(--text-secondary);
             font-size: 0.9rem;
             margin-bottom: 20px;
+        }
+
+        .uploader-info {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .uploader-info i {
+            color: var(--accent-primary);
         }
 
         .image-actions {
@@ -207,13 +226,24 @@
         }
 
         @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="view-header">
+        <button class="btn-icon" onclick="history.back()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
         <div class="view-actions">
             <button class="btn-icon" onclick="copyImageLink()">
                 <i class="fas fa-link"></i>
@@ -233,6 +263,10 @@
         </div>
         <div class="image-info-panel">
             <h2 id="imageName"></h2>
+            <div class="uploader-info" id="uploaderInfo">
+                <i class="fas fa-user"></i>
+                <span>Uploaded by <strong id="uploaderName">Loading...</strong></span>
+            </div>
             <div class="image-meta">
                 <span id="imageSize"></span>
                 <span id="uploadDate"></span>
@@ -261,29 +295,35 @@
     <script>
         const API_URL = "http://localhost:8000";
         let currentFile = null;
+
+        // Get filename from URL
         function getFilenameFromUrl() {
             const path = window.location.pathname;
             const match = path.match(/\/(?:view|img)\/(.+)/);
             return match ? match[1] : null;
         }
+
+        // Load file data by filename
         async function loadFile() {
             const filename = getFilenameFromUrl();
             if (!filename) {
                 showError('Invalid file URL');
                 return;
             }
-            
+
             try {
+                // Get file info by filename from the API
                 const token = localStorage.getItem('token');
                 const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
                 const response = await fetch(`${API_URL}/files`, { headers });
-                
+
                 if (response.ok) {
                     const files = await response.json();
                     currentFile = files.find(f => f.filename === filename);
-                    
+
                     if (currentFile) {
                         displayFile();
+                        await loadUploaderInfo();
                     } else {
                         showError('File not found');
                     }
@@ -296,14 +336,42 @@
             }
         }
 
+        async function loadUploaderInfo() {
+            const settings = JSON.parse(localStorage.getItem('customizationSettings') || '{}');
+            const uploaderName = document.getElementById('uploaderName');
+
+            if (settings.anonymousUpload) {
+                uploaderName.textContent = 'Anonymous';
+            } else {
+                // Try to get user info if available
+                const token = localStorage.getItem('token');
+                if (token) {
+                    try {
+                        const response = await fetch(`${API_URL}/users/me`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        if (response.ok) {
+                            const user = await response.json();
+                            uploaderName.textContent = user.name;
+                        } else {
+                            uploaderName.textContent = 'Unknown User';
+                        }
+                    } catch (error) {
+                        uploaderName.textContent = 'Unknown User';
+                    }
+                } else {
+                    uploaderName.textContent = 'Unknown User';
+                }
+            }
+        }
         function displayFile() {
             if (!currentFile) return;
-            
+
             const viewImage = document.getElementById('viewImage');
             const imageName = document.getElementById('imageName');
             const imageSize = document.getElementById('imageSize');
             const uploadDate = document.getElementById('uploadDate');
-            
+
             viewImage.src = `${API_URL}/raw/${currentFile.filename}`;
             viewImage.alt = currentFile.original_name;
             imageName.textContent = currentFile.original_name;
@@ -313,7 +381,10 @@
 
         function copyImageLink() {
             if (currentFile) {
-                const link = `${API_URL}/img/${currentFile.filename}`;
+                const settings = JSON.parse(localStorage.getItem('customizationSettings') || '{}');
+                let link;
+                link = `${API_URL}/img/${currentFile.filename}`;
+
                 navigator.clipboard.writeText(link).then(() => {
                     showNotification('Share link copied to clipboard!', 'success');
                 });
@@ -358,23 +429,34 @@
                 top: 20px;
                 right: 20px;
                 padding: 16px 20px;
-                background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--error)' : 'var(--accent-primary)'};
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#8b5cf6'};
                 color: white;
                 border-radius: 12px;
                 z-index: 10000;
                 animation: slideIn 0.3s ease;
                 box-shadow: var(--shadow);
+                box-shadow: 0 0 20px ${type === 'success' ? 'rgba(16, 185, 129, 0.3)' : type === 'error' ? 'rgba(239, 68, 68, 0.3)' : type === 'warning' ? 'rgba(245, 158, 11, 0.3)' : 'rgba(139, 92, 246, 0.3)'};
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 500;
             `;
-            notification.textContent = message;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                ${message}
+            `;
             document.body.appendChild(notification);
-            
+
             setTimeout(() => {
                 notification.remove();
             }, 3000);
         }
-        document.addEventListener('DOMContentLoaded', function() {
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
             loadFile();
         });
     </script>
 </body>
+
 </html>

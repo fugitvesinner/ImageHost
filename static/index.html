@@ -7,19 +7,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-primary: #0f0f0f;
-            --bg-secondary: #1a1a1a;
-            --bg-tertiary: #2a2a2a;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #0f0f1a;
+            --bg-tertiary: #16162b;
             --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
-            --text-muted: #666666;
-            --accent-primary: #ff6b6b;
-            --accent-secondary: #4ecdc4;
-            --border-color: #333333;
-            --hover-bg: #333333;
-            --success: #51cf66;
-            --warning: #ffd43b;
-            --error: #ff6b6b;
+            --text-secondary: #b8b8d4;
+            --text-muted: #6a6a8a;
+            --accent-primary: #8b5cf6;
+            --accent-secondary: #a855f7;
+            --border-color: #2d2d4a;
+            --hover-bg: #1f1f35;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            --purple-glow: 0 0 20px rgba(139, 92, 246, 0.3);
         }
 
         * {
@@ -114,37 +116,56 @@
         }
 
         .btn-primary {
-            background: var(--accent-primary);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: white;
+            box-shadow: var(--shadow);
         }
 
         .btn-primary:hover {
-            background: #ff5252;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: var(--purple-glow), var(--shadow);
         }
 
         /* Hero Section */
         .hero {
-            padding: 100px 0;
+            padding: 120px 0;
             text-align: center;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
+            font-size: 4rem;
+            margin-bottom: 24px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            position: relative;
+            z-index: 1;
         }
 
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--text-secondary);
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto 40px;
+            position: relative;
+            z-index: 1;
+            line-height: 1.7;
         }
 
         .hero-buttons {
@@ -152,80 +173,100 @@
             gap: 20px;
             justify-content: center;
             margin-bottom: 60px;
+            position: relative;
+            z-index: 1;
         }
 
         .feature-preview {
-            background: var(--bg-secondary);
-            border-radius: 15px;
-            padding: 40px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 48px;
             border: 1px solid var(--border-color);
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            box-shadow: var(--purple-glow), var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .feature-preview:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--purple-glow), var(--shadow-hover);
         }
 
         /* Features Grid */
         .features {
-            padding: 100px 0;
+            padding: 120px 0;
             background: var(--bg-secondary);
         }
 
         .section-title {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 80px;
         }
 
         .section-title h2 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 3rem;
+            margin-bottom: 20px;
             color: var(--text-primary);
+            font-weight: 700;
         }
 
         .section-title p {
             color: var(--text-secondary);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
         }
 
         .feature-card {
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
-            border-radius: 15px;
-            padding: 30px;
+            border-radius: 20px;
+            padding: 36px;
             text-align: center;
             transition: all 0.3s ease;
+            box-shadow: var(--shadow);
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px);
             border-color: var(--accent-primary);
+            box-shadow: var(--purple-glow), var(--shadow);
         }
 
         .feature-icon {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: white;
-            border-radius: 12px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 1.5rem;
+            margin: 0 auto 24px;
+            font-size: 1.8rem;
+            box-shadow: var(--purple-glow);
         }
 
         .feature-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
+            font-size: 1.4rem;
+            margin-bottom: 16px;
             color: var(--text-primary);
+            font-weight: 600;
         }
 
         .feature-card p {
             color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 1rem;
         }
 
         /* Modal Styles */
@@ -322,20 +363,21 @@
         footer {
             background: var(--bg-secondary);
             border-top: 1px solid var(--border-color);
-            padding: 60px 0 30px;
+            padding: 80px 0 40px;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 48px;
+            margin-bottom: 48px;
         }
 
         .footer-column h3 {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
+            font-size: 1.3rem;
+            margin-bottom: 24px;
             color: var(--text-primary);
+            font-weight: 600;
         }
 
         .footer-column ul {
@@ -343,7 +385,7 @@
         }
 
         .footer-column ul li {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .footer-column ul li a {
@@ -358,15 +400,24 @@
 
         .copyright {
             text-align: center;
-            padding-top: 30px;
+            padding-top: 40px;
             border-top: 1px solid var(--border-color);
             color: var(--text-muted);
+            font-size: 0.95rem;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .hero {
+                padding: 80px 0;
             }
 
             .hero-buttons {
@@ -376,6 +427,19 @@
 
             .nav-links {
                 display: none;
+            }
+
+            .features {
+                padding: 80px 0;
+            }
+
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
             }
         }
     </style>
@@ -391,8 +455,6 @@
                 <ul class="nav-links">
                     <li><a href="#home">Home</a></li>
                     <li><a href="#features">Features</a></li>
-                    <li><a href="#pricing">Pricing</a></li>
-                    <li><a href="#contact">Contact</a></li>
                 </ul>
                 <div class="auth-buttons" id="authButtons">
                     <button class="btn btn-outline" onclick="openModal('loginModal')">
@@ -423,9 +485,9 @@
                     <i class="fas fa-upload"></i> Drag & Drop Upload
                 </h3>
                 <div style="border: 2px dashed var(--border-color); border-radius: 10px; padding: 40px; text-align: center;">
-                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 15px;"></i>
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 3.5rem; color: var(--accent-primary); margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));"></i>
                     <p style="color: var(--text-secondary);">Drop your images here or click to browse</p>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 10px;">Supports PNG, JPG, JPEG, GIF, SVG • Max 10MB</p>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 12px;">Supports PNG, JPG, JPEG, GIF, SVG • Max 10MB per file</p>
                 </div>
             </div>
         </div>
@@ -440,45 +502,45 @@
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
+                        <i class="fas fa-rocket"></i>
                     </div>
-                    <h3>Lightning Fast</h3>
-                    <p>Global CDN ensures your images load instantly anywhere in the world.</p>
+                    <h3>Lightning Fast Uploads</h3>
+                    <p>Advanced compression and global CDN ensures your images upload and load instantly anywhere in the world.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3>Secure & Private</h3>
-                    <p>Enterprise-grade security with optional password protection and expiring links.</p>
+                    <h3>Military-Grade Security</h3>
+                    <p>Enterprise-level encryption with optional password protection, expiring links, and anonymous uploads.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
+                        <i class="fas fa-analytics"></i>
                     </div>
-                    <h3>Analytics</h3>
-                    <p>Track views, downloads, and engagement with detailed analytics.</p>
+                    <h3>Advanced Analytics</h3>
+                    <p>Comprehensive insights with real-time view tracking, download statistics, and engagement metrics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Full Customization</h3>
+                    <p>Customize URL length, enable invisible URLs, Discord embeds, and auto-deletion features.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
                     <h3>Mobile Optimized</h3>
-                    <p>Perfect experience across all devices with responsive design.</p>
+                    <p>Perfect experience across all devices with responsive design and touch-friendly interface.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-code"></i>
+                        <i class="fas fa-database"></i>
                     </div>
-                    <h3>Developer API</h3>
-                    <p>Integrate with your applications using our powerful REST API.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-infinity"></i>
-                    </div>
-                    <h3>Unlimited Storage</h3>
-                    <p>No limits on storage or bandwidth for premium users.</p>
+                    <h3>Generous Storage</h3>
+                    <p>1GB of free storage with easy file management, bulk operations, and export capabilities.</p>
                 </div>
             </div>
         </div>
@@ -643,6 +705,8 @@
             updateAuthUI(false);
             window.location.href = '/';
         }
+
+        // Login form handler
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
@@ -670,6 +734,8 @@
                 alert('Login failed. Please try again.');
             }
         });
+
+        // Register form handler
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const name = document.getElementById('registerName').value;

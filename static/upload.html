@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload - PixelDust</title>
+    <title>Upload</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/css/main.css">
 </head>
+
 <body>
     <div class="dashboard-layout">
         <!-- Sidebar -->
@@ -24,7 +26,7 @@
                 </a>
                 <a href="/static/gallery.html" class="nav-item">
                     <i class="fas fa-images"></i>
-                    <span>My Files</span>
+                    <span>Gallery</span>
                 </a>
                 <a href="/static/upload.html" class="nav-item active">
                     <i class="fas fa-upload"></i>
@@ -45,11 +47,58 @@
         <main class="main-content">
             <div class="page-header">
                 <div class="breadcrumb">
-                    <span class="breadcrumb-item">Dashboard</span>
-                    <i class="fas fa-chevron-right"></i>
                     <span class="breadcrumb-item">Image Host</span>
                     <i class="fas fa-chevron-right"></i>
                     <span class="breadcrumb-item active">Upload</span>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Total Uploads</div>
+                        <div class="stat-value" id="totalUploads">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Uploads Today</div>
+                        <div class="stat-value" id="uploadsToday">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">File Size Limit</div>
+                        <div class="stat-value">1000MB</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-hdd"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Used Space</div>
+                        <div class="stat-value" id="usedSpace">0MB</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Free Space</div>
+                        <div class="stat-value" id="freeSpace">1000MB</div>
+                    </div>
                 </div>
             </div>
 
@@ -64,7 +113,7 @@
                     <h3>Drop Images Here</h3>
                     <p>or click to browse files</p>
                     <p class="upload-info">Supports PNG, JPG, JPEG, GIF, SVG • Max 10MB per file</p>
-                    <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.gif,.svg" style="display: none;">
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
                     <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
                         <i class="fas fa-folder-open"></i>
                         Browse Files
@@ -73,10 +122,10 @@
 
                 <div class="storage-info">
                     <div class="storage-bar">
-                        <div class="storage-used" id="storageBar" style="width: 0.45%"></div>
+                        <div class="storage-used" id="storageBar"></div>
                     </div>
                     <div class="storage-text">
-                        <span id="usedStorage">4.54MB</span> of 1000MB used
+                        <span id="usedStorage">0MB</span> of 1000MB used
                     </div>
                 </div>
 
@@ -90,4 +139,5 @@
 
     <script src="/static/js/upload.js"></script>
 </body>
+
 </html>

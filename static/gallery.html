@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Files - PixelDust</title>
+    <title>Gallery</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/css/main.css">
 </head>
@@ -24,7 +24,7 @@
                 </a>
                 <a href="/static/gallery.html" class="nav-item active">
                     <i class="fas fa-images"></i>
-                    <span>My Files</span>
+                    <span>Gallery</span>
                 </a>
                 <a href="/static/upload.html" class="nav-item">
                     <i class="fas fa-upload"></i>
@@ -45,8 +45,6 @@
         <main class="main-content">
             <div class="page-header">
                 <div class="breadcrumb">
-                    <span class="breadcrumb-item">Dashboard</span>
-                    <i class="fas fa-chevron-right"></i>
                     <span class="breadcrumb-item">Image Host</span>
                     <i class="fas fa-chevron-right"></i>
                     <span class="breadcrumb-item active">Gallery</span>
@@ -57,20 +55,39 @@
                 </button>
             </div>
 
-            <!-- Gallery Header -->
-            <div class="gallery-header">
-                <h1 class="page-title">My Files</h1>
+
+
+            <h1 class="page-title">Gallery</h1>
+            <p class="page-subtitle">Manage and organize your uploaded images</p>
+
+
+            
+            <!-- Gallery Controls -->
+            <div class="content-section">
                 <div class="gallery-controls">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search files..." id="searchInput">
+                    <div class="controls-left">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search files..." id="searchInput">
+                        </div>
                     </div>
-                    <select class="sort-select" id="sortSelect">
-                        <option value="newest">Newest First</option>
-                        <option value="oldest">Oldest First</option>
-                        <option value="largest">Largest First</option>
-                        <option value="smallest">Smallest First</option>
-                    </select>
+                    <div class="controls-right">
+                        <select class="sort-select" id="sortSelect">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="largest">Largest First</option>
+                            <option value="smallest">Smallest First</option>
+                            <option value="name">Name A-Z</option>
+                            <option value="type">File Type</option>
+                        </select>
+                        <select class="filter-select" id="typeFilter">
+                            <option value="all">All Types</option>
+                            <option value="png">PNG</option>
+                            <option value="jpg">JPG/JPEG</option>
+                            <option value="gif">GIF</option>
+                            <option value="svg">SVG</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 

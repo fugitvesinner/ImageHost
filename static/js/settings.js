@@ -107,20 +107,46 @@ function getBrowserInfo(userAgent) {
 function confirmTerminateSession(sessionToken) {
     const currentToken = localStorage.getItem('token');
     if (currentToken) {
-        try {
-            const payload = JSON.parse(atob(currentToken.split('.')[1]));
-            showConfirmModal(
-                'Terminate Session',
-                'Are you sure you want to terminate this session? You will be logged out from that device.',
-                () => terminateSession(sessionToken)
-            );
-        } catch (e) {
-            showConfirmModal(
-                'Terminate Session',
-                'Are you sure you want to terminate this session?',
-                () => terminateSession(sessionToken)
-            );
-        }
+        showConfirmModal(
+            'Terminate Session',
+            'Are you sure you want to terminate this session?',
+            () => terminateSession(sessionToken)
+        );
+    }
+}
+
+function confirmDeleteAccount() {
+    document.getElementById('deleteAccountModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    const deleteInput = document.getElementById('deleteConfirmInput');
+    const deleteButton = document.getElementById('deleteAccountButton');
+    
+    deleteInput.value = '';
+    deleteButton.disabled = true;
+    
+    deleteInput.addEventListener('input', function() {
+        deleteButton.disabled = this.value !== 'DELETE';
+    });
+}
+
+function closeDeleteAccountModal() {
+    document.getElementById('deleteAccountModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+async function executeDeleteAccount() {
+    const token = localStorage.getItem('token');
+    
+    try {
+        showNotification('Account deletion feature will be implemented soon.', 'warning');
+        closeDeleteAccountModal();
+        setTimeout(() => {
+            logout();
+        }, 2000);
+    } catch (error) {
+        console.error('Account deletion error:', error);
+        showNotification('Failed to delete account', 'error');
     }
 }
 
@@ -233,29 +259,13 @@ async function terminateSession(sessionToken) {
     }
 }
 
-function deleteAccount() {
-    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-        if (confirm('This will permanently delete all your files and data. Are you absolutely sure?')) {
-            showNotification('Account deletion feature will be implemented soon.', 'warning');
-        }
-    }
-}
-
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 16px 20px;
-        background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--error)' : type === 'warning' ? 'var(--warning)' : 'var(--accent-primary)'};
-        color: white;
-        border-radius: 8px;
-        z-index: 10000;
-        animation: slideIn 0.3s ease;
-        box-shadow: var(--shadow);
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+        ${message}
     `;
-    notification.textContent = message;
     document.body.appendChild(notification);
     
     setTimeout(() => {
