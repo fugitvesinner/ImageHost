@@ -61,7 +61,8 @@ Installed via `pip install -r requirements.txt`:
 3. ### Install dependencies
 
     ```bas
-    pip install -r requirements.txt```
+    pip install -r requirements.txt
+    ```
 
 
 3. ### Set environment variables
