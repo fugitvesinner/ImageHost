@@ -547,7 +547,6 @@
         </div>
     </section>
 
-    <!-- Login Modal -->
     <div class="modal-backdrop" id="loginModal">
         <div class="modal">
             <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
@@ -573,7 +572,6 @@
         </div>
     </div>
 
-    <!-- Register Modal -->
     <div class="modal-backdrop" id="registerModal">
         <div class="modal">
             <button class="modal-close" onclick="closeModal('registerModal')">&times;</button>
@@ -735,8 +733,6 @@
                 alert('Login failed. Please try again.');
             }
         });
-
-        // Register form handler
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const name = document.getElementById('registerName').value;

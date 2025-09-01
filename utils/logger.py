@@ -40,12 +40,6 @@ def setup_logger():
     )
     handler.setFormatter(formatter)
 
-    class ModuleFilter(logging.Filter):
-        def filter(self, record):
-            return record.module not in Logging.IGNORED_MODULES
-
-    handler.addFilter(ModuleFilter())
-
     logger.addHandler(handler)
     return logger
 
